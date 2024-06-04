@@ -11,21 +11,24 @@ public class Board {
             positions.put(i, new Position(i));
         }
     }
-
+//method to place a piece on the board
     public boolean placePiece(int pos, Piece piece) {
         Position position = positions.get(pos);
         if (position.isOccupied()) {
             return false;
+            //return false if the position is already occupied
         }
         position.setPiece(piece);
         return true;
     }
-
+//method to move a piece on the board
     public boolean movePiece(int fromPos, int toPos) {
         Position fromPosition = positions.get(fromPos);
+        //get the position of the piece to move from
         Position toPosition = positions.get(toPos);
         if (!fromPosition.isOccupied() || toPosition.isOccupied()) {
             return false;
+            //return false if the from position is not occupied or the to position is already occupied
         }
         toPosition.setPiece(fromPosition.getPiece());
         fromPosition.setPiece(null);
@@ -46,6 +49,7 @@ public class Board {
   				if(positions.get(mill[0]).getPiece() == piece &&
   						positions.get(mill[1]).getPiece() == piece &&
   						positions.get(mill[2]).getPiece() == piece) {
+                            //check if all the positions in the mill have the same piece
   					return true;
   				}
   			}
@@ -53,7 +57,7 @@ public class Board {
   		return false;
   	}
 
-
+//method to remove a piece from the board
     public Position getPosition(int pos) {
         return positions.get(pos);
     }

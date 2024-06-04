@@ -6,20 +6,24 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+// Class that extends JPanel to create a custom board panel for the game
 
 public class BoardPanel extends JPanel {
     public static final int BOARD_SIZE = 500;
     public static final int PADDING = 50;
     public static final int INNER_PADDING = 150;
+    // Game instance and array of buttons
 
     private Game game;
     private JButton[] buttons;
+    // Constructor for BoardPanel
 
     public BoardPanel(Game game) {
         this.game = game;
         this.buttons = new JButton[24];
 
         setLayout(null); // Use absolute positioning
+        // Initialize buttons and add them to the panel
 
         for (int i = 0; i < 24; i++) {
             buttons[i] = new JButton();
@@ -38,11 +42,13 @@ public class BoardPanel extends JPanel {
             add(buttons[i]);
         }
     }
+    // Method to handle button click
 
     private void handleButtonClick(int pos) {
         game.handleUserAction(pos);
         updateBoard();
     }
+    // Method to get position coordinates based on position number
 
     private int[] getPositionCoordinates(int pos) {
         switch (pos) {
@@ -73,6 +79,7 @@ public class BoardPanel extends JPanel {
             default: return new int[]{0, 0};
         }
     }
+    // Override paintComponent method to draw the board
 
     private void updateBoard() {
         for (int i = 0; i < 24; i++) {
@@ -95,7 +102,7 @@ public class BoardPanel extends JPanel {
         super.paintComponent(g);
         drawBoard(g);
     }
-
+    // Method to draw the board
     public void drawBoard(Graphics g) {
         g.setColor(Color.BLACK);
         int[][] lines = {
@@ -136,7 +143,8 @@ public class BoardPanel extends JPanel {
     public static void setCurrentPhase(String phase) {
         currentPhase = phase;
     }
-    
+        // Method to handle mouse click
+
 public void mouseClicked(MouseEvent e) {
     int x = e.getX();
     int y = e.getY();
@@ -152,12 +160,11 @@ public void mouseClicked(MouseEvent e) {
         }
     }
 }
-    
+    //method to get position from coordinates
     private int getPositionFromCoordinates(int x, int y) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
-
+//method to handle removing piece
 	private void handleRemovingPiece(int pos) {
         if (game.getBoard().getPosition(pos).isOccupied() &&
             game.getBoard().getPosition(pos).getPiece().getSymbol() != game.getCurrentPlayer().getPieceType().getSymbol()) {
@@ -171,9 +178,10 @@ public void mouseClicked(MouseEvent e) {
     }
 
     private int fromPos = -1;
-
+//method to handle moving piece
 private void handleMovingPiece(int pos) {
     if (fromPos == -1) {
+        // Select the piece to move
         if (game.getBoard().getPosition(pos).isOccupied() &&
             game.getBoard().getPosition(pos).getPiece().getSymbol() == game.getCurrentPlayer().getPieceType().getSymbol()) {
             fromPos = pos;
@@ -181,6 +189,7 @@ private void handleMovingPiece(int pos) {
             System.out.println("Invalid position or not your piece. Try again.");
         }
     } else {
+        // Move the piece from the selected position to the new position
         game.movePiece(fromPos, pos);
         fromPos = -1;
     }
