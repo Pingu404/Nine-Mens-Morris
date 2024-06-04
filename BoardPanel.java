@@ -131,25 +131,27 @@ public class BoardPanel extends JPanel {
         }
     }
     
-    private String currentPhase;
+    private static String currentPhase;
 
     public static void setCurrentPhase(String phase) {
-        this.currentPhase = phase;
+        currentPhase = phase;
     }
     
-    public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        int pos = getPositionFromCoordinates(x, y);
+public void mouseClicked(MouseEvent e) {
+    int x = e.getX();
+    int y = e.getY();
+    int pos = getPositionFromCoordinates(x, y);
 
-        if (pos != -1) {
-            if (currentPhase.equals("Removing")) {
-                handleRemovingPiece(pos);
-            } else {
-                game.handleUserAction(pos);
-            }
+    if (pos != -1) {
+        if (currentPhase.equals("Moving")) {
+            handleMovingPiece(pos);
+        } else if (currentPhase.equals("Removing")) {
+            handleRemovingPiece(pos);
+        } else {
+            game.handleUserAction(pos);
         }
     }
+}
     
     private int getPositionFromCoordinates(int x, int y) {
 		// TODO Auto-generated method stub
@@ -167,4 +169,20 @@ public class BoardPanel extends JPanel {
             System.out.println("Invalid position or your own piece. Try again.");
         }
     }
+
+    private int fromPos = -1;
+
+private void handleMovingPiece(int pos) {
+    if (fromPos == -1) {
+        if (game.getBoard().getPosition(pos).isOccupied() &&
+            game.getBoard().getPosition(pos).getPiece().getSymbol() == game.getCurrentPlayer().getPieceType().getSymbol()) {
+            fromPos = pos;
+        } else {
+            System.out.println("Invalid position or not your piece. Try again.");
+        }
+    } else {
+        game.movePiece(fromPos, pos);
+        fromPos = -1;
+    }
+}
 }

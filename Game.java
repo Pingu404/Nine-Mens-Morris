@@ -43,20 +43,36 @@ public class Game {
         boolean removedPiece = false;
         while (!removedPiece) {
             int pos = getUserInput(); // Implement a method to get user input for the position
-            if (removePiece(pos)) {
+            if (currentPlayer.getPieceType() != getPiece(pos) && removePiece(pos)) {
                 removedPiece = true;
             } else {
-                System.out.println("Invalid position or your own piece. Try again.");
+                System.out.println("Invalid position or not an opponent's piece. Try again.");
             }
         }
     }
 
-    private void movePiece(int fromPos, int toPos) {
+    private Piece getPiece(int pos) {
+        return board.getPosition(pos).getPiece();
+    }
+
+    private boolean isOpponentPiece(int pos) {
+        return board.getPosition(pos).isOccupied() && board.getPosition(pos).getPiece().getSymbol() != currentPlayer.getPieceType().getSymbol();
+    }
+
+    private int getUserInput() {
+        // Implement a method to get user input for the position
+        return 0;
+    }
+
+    void movePiece(int fromPos, int toPos) {
         if (board.movePiece(fromPos, toPos)) {
             checkMill(toPos);
+           
             switchPlayer();
         }
     }
+
+
 
     boolean removePiece(int pos) {
         Position position = board.getPosition(pos);
@@ -68,7 +84,7 @@ public class Game {
             } else {
                 p1.decrementPiecesOnBoard();
             }
-            phase = "Moving";
+            phase = "Placing";
             switchPlayer();
         }
 		return false;
