@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -126,6 +128,43 @@ public class BoardPanel extends JPanel {
 
         for (int[] line : lines) {
             g.drawLine(line[0], line[1], line[2], line[3]);
+        }
+    }
+    
+    private String currentPhase;
+
+    public static void setCurrentPhase(String phase) {
+        this.currentPhase = phase;
+    }
+    
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        int pos = getPositionFromCoordinates(x, y);
+
+        if (pos != -1) {
+            if (currentPhase.equals("Removing")) {
+                handleRemovingPiece(pos);
+            } else {
+                game.handleUserAction(pos);
+            }
+        }
+    }
+    
+    private int getPositionFromCoordinates(int x, int y) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private void handleRemovingPiece(int pos) {
+        if (game.getBoard().getPosition(pos).isOccupied() &&
+            game.getBoard().getPosition(pos).getPiece().getSymbol() != game.getCurrentPlayer().getPieceType().getSymbol()) {
+            game.removePiece(pos);
+            game.setPhase("Moving");
+            currentPhase = "Moving";
+        } else {
+            // Display an error message or provide feedback to the user
+            System.out.println("Invalid position or your own piece. Try again.");
         }
     }
 }

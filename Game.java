@@ -19,7 +19,7 @@ public class Game {
         if (phase.equals("Placing")) {
             placePiece(pos);
         } else if (phase.equals("Moving")) {
-            // Logic for moving phase
+        	 movePiece(pos, pos);
         } else if (phase.equals("Removing")) {
             removePiece(pos);
         }
@@ -38,6 +38,18 @@ public class Game {
             }
         }
     }
+    
+    private void handleRemoving() {
+        boolean removedPiece = false;
+        while (!removedPiece) {
+            int pos = getUserInput(); // Implement a method to get user input for the position
+            if (removePiece(pos)) {
+                removedPiece = true;
+            } else {
+                System.out.println("Invalid position or your own piece. Try again.");
+            }
+        }
+    }
 
     private void movePiece(int fromPos, int toPos) {
         if (board.movePiece(fromPos, toPos)) {
@@ -46,10 +58,11 @@ public class Game {
         }
     }
 
-    private void removePiece(int pos) {
+    boolean removePiece(int pos) {
         Position position = board.getPosition(pos);
         if (position.isOccupied() && position.getPiece().getSymbol() != currentPlayer.getPieceType().getSymbol()) {
-            board.getPosition(pos).setPiece(null);
+            Piece removedPiece = position.getPiece();
+            position.setPiece(null);
             if (currentPlayer == p1) {
                 p2.decrementPiecesOnBoard();
             } else {
@@ -58,12 +71,18 @@ public class Game {
             phase = "Moving";
             switchPlayer();
         }
+		return false;
     }
 
     private void checkMill(int pos) {
         if (board.isMill(pos, currentPlayer.getPieceType())) {
             phase = "Removing";
+            BoardPanel.setCurrentPhase(phase);
         }
+    }
+    
+    public void setPhase(String phase) {
+        this.phase = phase;
     }
 
     private void switchPlayer() {
@@ -101,5 +120,10 @@ public class Game {
         this.currentPlayer = p1;
         this.turnCount = 0;
         this.phase = "Placing";
+        
     }
+    
+    
+    
+    
 }
